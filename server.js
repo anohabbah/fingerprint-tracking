@@ -32,6 +32,7 @@ const connectionsRouter = require('./connections.route');
 
 const app = express();
 app.use(express.json());
+app.use(express.static(__dirname + '/dist/'));
 app.use(apiCallLogger('dev'));
 app.use(helmet());
 
