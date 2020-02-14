@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   fingerprint: string;
   time;
   details: string;
+  components: { key: string, value: any }[];
 
   constructor(private apiService: ApiService) {}
 
@@ -25,16 +26,12 @@ export class AppComponent implements OnInit {
     this.apiService
       .apply(fingerprint, components)
       .subscribe((res: Connection) => {
-        console.log(res);
         this.fingerprint = res._id;
         const d2 = new Date();
         // @ts-ignore
         this.time = (d2 - d1);
 
-        this.details = pipe(
-          map(({ key, value }) => `${key} = ${String(value).substr(0, 100)}`),
-          join('\n')
-        )(res.fingerprint);
+        this.components = res.fingerprint;
       });
   }
 }
