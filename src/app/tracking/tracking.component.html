@@ -1,0 +1,36 @@
+<div class="container">
+  <h1 class="h1 heading"> TD PRM2 - Fingerprint</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="font-weight-bold">{{ fingerprint }}</div>
+          <div class="text-muted font-weight-lighter">Your browser fingerprint</div>
+        </div>
+        <div class="text-right">
+          <div class="font-weight-lighter"><var class="font-weight-bold">{{ time }}</var> ms</div>
+          <div class="font-weight-lighter">Time took to calculate the fingerprint</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-text overflow-auto">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Data</th>
+            <th scope="col">Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let line of this.components">
+            <th scope="row">{{ line.key }}</th>
+            <td>{{ line.value }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
