@@ -29,6 +29,7 @@ mongoose
   });
 
 const connectionsRouter = require('./connections.route');
+const statisticsRouter = require('./statistics.route');
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,7 @@ app.use(apiCallLogger('dev'));
 app.use(helmet());
 
 app.use('/api/connections', connectionsRouter);
+app.use('/api/statistics', statisticsRouter);
 
 app.use((req, res, next) => {
   next(new createError.NotFound())
