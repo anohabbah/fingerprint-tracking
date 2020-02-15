@@ -5,18 +5,27 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { TrackingComponent } from './tracking/tracking.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import {NgApexchartsModule} from 'ng-apexcharts';
+import { PieComponent } from './statistics/pie/pie.component';
+import { LineComponent } from './statistics/line/line.component';
 
 const routes = [
-  { path: '', component: TrackingComponent, pathMatch: 'full' }
+  { path: '', component: TrackingComponent, pathMatch: 'full' },
+  { path: 'statistics', component: StatisticsComponent },
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    TrackingComponent
+    TrackingComponent,
+    StatisticsComponent,
+    PieComponent,
+    LineComponent,
   ],
   imports: [
     RouterModule.forRoot(routes, { enableTracing: true }),
+    NgApexchartsModule,
     BrowserModule,
     HttpClientModule
   ],

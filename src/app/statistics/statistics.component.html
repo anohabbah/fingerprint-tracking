@@ -1,0 +1,40 @@
+<p>Analyse</p>
+<p>Analyse OS</p>
+<app-pie [series]="seriesSystem" labels="labelsSystem"></app-pie>
+
+<p>Analyse Fuseau horaire</p>
+<app-pie [series]="seriesTime" labels="labelsTime"></app-pie>
+
+<p>Analyse Resolutions</p>
+<app-pie [series]="seriesResolution" labels="labelsResolution"></app-pie>
+
+<p>Analyse Memory</p>
+<app-pie [series]="seriesMemory" labels="labelsMemory"></app-pie>
+
+<p>Analyse Coeurs</p>
+<app-pie [series]="seriesHardware" labels="labelsHardware"></app-pie>
+
+<p>Analyse Langage</p>
+<app-pie [series]="seriesLanguage" labels="labelsLanguage"></app-pie>
+
+<p>Analyse Navigate</p>
+<app-pie [series]="seriesNavigate" labels="labelsNavigate"></app-pie>
+
+<p>Analyse Connexion</p>
+<app-pie [series]="seriesConnexion" labels="labelsConnexion"></app-pie>
+
+<p>Analyse Dernière Connexion</p>
+{{listDerniere}}
+
+<p>Analyse liste Dernière Connexion</p>
+<li *ngFor="let list of listDerniereConnexion">
+  {{ list }}
+</li>
+
+<p>Analyse liste Graphique</p>
+<li *ngFor="let list of listGraphique">
+  {{ list }}
+</li>
+
+<p>Analyse Evolutions</p>
+<app-line [data]="dataEvolution" [axes]="axesEvolution" [labels]="labelsEvolution" [title]="titreEvolution"></app-line>
