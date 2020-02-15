@@ -5,8 +5,14 @@
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between">
-        <span>Your browser fingerprint: <strong>{{ fingerprint }}</strong></span>
-        <span>Time took to calculate the fingerprint: <var>{{ time }}</var> ms</span>
+        <div>
+          <div class="font-weight-bold">{{ fingerprint }}</div>
+          <div class="text-muted font-weight-lighter">Your browser fingerprint</div>
+        </div>
+        <div class="text-right">
+          <div class="font-weight-lighter"><var class="font-weight-bold">{{ time }}</var> ms</div>
+          <div class="font-weight-lighter">Time took to calculate the fingerprint</div>
+        </div>
       </div>
     </div>
     <div class="card-body">
