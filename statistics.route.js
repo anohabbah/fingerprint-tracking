@@ -1,4 +1,5 @@
 const express = require('express');
+const UAParser = require('ua-parser-js');
 const map = require('lodash/fp/map');
 const keys = require('lodash/fp/keys');
 const pipe = require('lodash/fp/pipe');
@@ -9,6 +10,7 @@ const reduce = require('lodash/fp/reduce');
 const groupBy = require('lodash/fp/groupBy');
 const flatten = require('lodash/fp/flatten');
 const entries = require('lodash/fp/entries');
+const mapKeys = require('lodash/fp/mapKeys');
 const mapValues = require('lodash/fp/mapValues');
 const formatWithOptions = require('date-fns/fp/formatWithOptions');
 const fr = require('date-fns/locale/fr');
@@ -36,8 +38,24 @@ async function formatData(targetField) {
 
 const router = express.Router();
 
-router.get('/systems', async (req, res) => {
-  const data = await formatData('platform');
+router.get('/os', async (req, res) => {
+  const docs = await Connection.find({
+  'fingerprint.key': 'userAgent'
+});
+
+  const data = pipe(
+    map(doc => doc.fingerprint.map(data => ({ ...data, count: doc.count }))),
+    map(filter({ key: 'userAgent' })),
+    flatten,
+    map(({ value, count }) => {
+      const ua = new UAParser(value);
+      return { count, value: ua.getOS().name }
+    }),
+    groupBy('value'),
+    mapValues((value) => reduce(reducer, 0, value)),
+    entries,
+    unzip
+  )(docs);
 
   res.json({ data });
 });
@@ -79,12 +97,23 @@ router.get('/languages', async (req, res) => {
 });
 
 router.get('/user-agents', async (req, res) => {
-  const data = await formatData('userAgent');
-
-  data[0] = data[0].map(str => {
-    if (str.indexOf('Firefox') !== -1) return 'Firefox';
-    if (str.indexOf('Chrome') !== -1) return 'Chrome'
+  const docs = await Connection.find({
+    'fingerprint.key': 'userAgent'
   });
+
+  const data = pipe(
+    map(doc => doc.fingerprint.map(data => ({ ...data, count: doc.count }))),
+    map(filter({ key: 'userAgent' })),
+    flatten,
+    map(({ value, count }) => {
+      const ua = new UAParser(value);
+      return { count, value: ua.getBrowser().name }
+    }),
+    groupBy('value'),
+    mapValues((value) => reduce(reducer, 0, value)),
+    entries,
+    unzip
+  )(docs);
 
   res.json({ data });
 });

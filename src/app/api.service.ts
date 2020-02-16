@@ -20,7 +20,7 @@ export class ApiService {
 
   getSystemStats(): Observable<DataType> {
     return this.http
-      .get(`${this.statisticsBaseURL}/systems`)
+      .get(`${this.statisticsBaseURL}/os`)
       .pipe(
         map((res: { data: DataType }) => res.data),
         shareReplay(),
