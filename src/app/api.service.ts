@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Connection } from './connection';
-import {catchError, map} from 'rxjs/operators';
-import {error} from 'winston';
+import { catchError, map, shareReplay } from 'rxjs/operators';
+
+import { DataType} from './statistics/statistics.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,94 +18,113 @@ export class ApiService {
     return this.http.put<Connection>('/api/connections/' + fingerprint, { fingerprint: data });
   }
 
-  getSystemStats(): Observable<object> {
+  getSystemStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/systems`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getSystemStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getSystemStats', [[], []]))
       );
   }
 
-  getGraphicCardStats(): Observable<object> {
+  getGraphicCardStats(): Observable<string[]> {
     return this.http
       .get(`${this.statisticsBaseURL}/graphic-cards`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getGraphicCardStats', {}))
+        map((res: { data: string[] }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getGraphicCardStats', []))
       );
   }
 
-  getTimezoneStats(): Observable<object> {
+  getTimezoneStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/timezones`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getTimezoneStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getTimezoneStats', [[], []]))
       );
   }
 
-  getDeviceMemoryStats(): Observable<object> {
+  getDeviceResolutionStats(): Observable<DataType> {
     return this.http
-      .get(`${this.statisticsBaseURL}/momeries`)
+      .get(`${this.statisticsBaseURL}/resolutions`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getDeviceMemoryStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getDeviceMemoryStats', [[], []]))
       );
   }
 
-  getHardwareConcurrencyStats(): Observable<object> {
+  getDeviceMemoryStats(): Observable<DataType> {
+    return this.http
+      .get(`${this.statisticsBaseURL}/memories`)
+      .pipe(
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getDeviceMemoryStats', [[], []]))
+      );
+  }
+
+  getHardwareConcurrencyStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/hardware-concurrency`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getHardwareConcurrencyStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getHardwareConcurrencyStats', [[], []]))
       );
   }
 
-  getBrowserLanguageStats(): Observable<object> {
+  getBrowserLanguageStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/languages`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getBrowserLanguageStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getBrowserLanguageStats', [[], []]))
       );
   }
 
-  getBrowserStats(): Observable<object> {
+  getBrowserStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/user-agents`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getBrowserStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getBrowserStats', [[], []]))
       );
   }
 
-  getUserStats(): Observable<object> {
+  getUserStats(): Observable<object[]> {
     return this.http
-      .get(`${this.statisticsBaseURL}/users`)
+      .get(`${this.statisticsBaseURL}/connections`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getUserStats', {}))
+        map((res: { data: object[] }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getUserStats', []))
       );
   }
 
-  getMonthlyConnectionStats(): Observable<object> {
+  getMonthlyConnectionStats(): Observable<DataType> {
     return this.http
       .get(`${this.statisticsBaseURL}/monthly`)
       .pipe(
-        map((res: { data: object }) => res.data),
-        catchError(this.handleError('getMonthlyConnectionStats', {}))
+        map((res: { data: DataType }) => res.data),
+        shareReplay(),
+        catchError(this.handleError('getMonthlyConnectionStats', [[], []]))
       );
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (err: any): Observable<T> => {
-      console.error(err);
+      console.error('ERROR HANDLER : %o', err);
 
       // this.log(`${operation} failed: ${err.message}`);
 
-      return of(result as T);
+      return of(result);
     };
   }
 }

@@ -1,8 +1,22 @@
 const express = require('express');
+const map = require('lodash/fp/map');
+const keys = require('lodash/fp/keys');
+const pipe = require('lodash/fp/pipe');
+const first = require('lodash/fp/first');
+const unzip = require('lodash/fp/unzip');
+const filter = require('lodash/fp/filter');
+const reduce = require('lodash/fp/reduce');
+const groupBy = require('lodash/fp/groupBy');
+const flatten = require('lodash/fp/flatten');
+const entries = require('lodash/fp/entries');
+const mapValues = require('lodash/fp/mapValues');
+const formatWithOptions = require('date-fns/fp/formatWithOptions');
+const fr = require('date-fns/locale/fr');
 
-const Connection = require('./connections.route');
+const Connection = require('./connection.model');
 
-const reducer = (acc, cur) => acc + cur.count;
+const reducer = (acc, cur) => {
+  return acc + cur.count};
 
 async function formatData(targetField) {
   const docs = await Connection.find({
@@ -10,11 +24,13 @@ async function formatData(targetField) {
   });
 
   return pipe(
-    map('fingerprint'),
+    map(doc => doc.fingerprint.map(data => ({ ...data, count: doc.count }))),
     map(filter({ key: targetField })),
     flatten,
     groupBy('value'),
-    mapValues((value) => reduce(reducer, 0, value))
+    mapValues((value) => reduce(reducer, 0, value)),
+    entries,
+    unzip
   )(docs);
 }
 
@@ -65,15 +81,24 @@ router.get('/languages', async (req, res) => {
 router.get('/user-agents', async (req, res) => {
   const data = await formatData('userAgent');
 
+  data[0] = data[0].map(str => {
+    if (str.indexOf('Firefox') !== -1) return 'Firefox';
+    if (str.indexOf('Chrome') !== -1) return 'Chrome'
+  });
+
   res.json({ data });
 });
 
-router.get('/users-stat', async (req, res) => {
-  const docs = await Connection.find();
-
-  const data = pipe(groupBy('id'), mapValues('count'))(docs);
+router.get('/connections', async (req, res) => {
+  const data = await Connection.find(null, null, { sort: '-updatedAt', limit: 10 });
 
   res.json({ data });
+});
+
+router.get('/last-connection', async (req, res) => {
+  const data = await Connection.find(null, null, { sort: '-updatedAt', limit: 1 });
+
+  res.json(data);
 });
 
 router.get('/monthly', async (req, res) => {
@@ -88,7 +113,9 @@ router.get('/monthly', async (req, res) => {
       createdAt: dateFormat(doc.createdAt)
     })),
     groupBy('updatedAt'),
-    mapValues((value) => reduce(reducer, 0, value))
+    mapValues((value) => reduce(reducer, 0, value)),
+    entries,
+    unzip
   )(docs);
 
   res.json({ data });
