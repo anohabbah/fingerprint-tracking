@@ -1,23 +1,58 @@
-import { Component, ViewChild, Input } from '@angular/core';
-import { ChartComponent } from 'ng-apexcharts';
+import {Component, ViewChild, Input, OnInit} from '@angular/core';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexDataLabels,
+  ApexGrid, ApexLegend,
+  ApexMarkers,
+  ApexStroke, ApexTitleSubtitle,
+  ApexXAxis,
+  ApexYAxis,
+  ChartComponent
+} from 'ng-apexcharts';
+
+export interface ChartOptions {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  colors: string[];
+  yaxis: ApexYAxis;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+}
 
 @Component({
   selector: 'app-line',
   templateUrl: './line.component.html',
   styleUrls: ['./line.component.css']
 })
-export class LineComponent {
+export class LineComponent implements OnInit {
 
-  @Input('data')
-  set seriesUpdates(value: any) {
-    this.data = value;
-    this.updateSeries();
-  }
+  constructor() {}
 
-  constructor() {
+  @ViewChild('chart') chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+
+  @Input()
+  data: number[];
+
+  @Input()
+  label: string ;
+
+  @Input()
+  axes: string[];
+
+  @Input()
+  title: string;
+
+  ngOnInit(): void {
     this.chartOptions = {
       series: [
-        { name: this.labels, data: this.data}
+        { name: this.label, data: this.data}
       ],
       chart: {
         height: 350,
@@ -27,10 +62,10 @@ export class LineComponent {
         }
       },
       dataLabels: {
-        enabled: false
+        enabled: true
       },
       stroke: {
-        curve: 'straight'
+        curve: 'smooth'
       },
       title: {
         text: this.title,
@@ -43,31 +78,23 @@ export class LineComponent {
         }
       },
       xaxis: {
-        categories: this.axes
+        categories: this.axes,
+        title: {
+          text: 'Month'
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Count'
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
       }
     };
-  }
-
-  @ViewChild('chart') chart: ChartComponent;
-  public chartOptions: any;
-
-  data: any = [];
-
-  @Input()
-  labels: any ;
-  @Input()
-  axes: any;
-  @Input()
-  title: any;
-
-  updateSeries() {
-    this.chartOptions.series = [
-      {
-        name: this.labels,
-        data: this.data
-      }
-    ];
-    this.chartOptions.axes = this.axes;
-    this.chartOptions.title = this.title;
   }
 }

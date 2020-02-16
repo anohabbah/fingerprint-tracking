@@ -9,6 +9,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import {NgApexchartsModule} from 'ng-apexcharts';
 import { PieComponent } from './statistics/pie/pie.component';
 import { LineComponent } from './statistics/line/line.component';
+import { CardComponent } from './statistics/card/card.component';
 
 const routes = [
   { path: '', component: TrackingComponent, pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes = [
     StatisticsComponent,
     PieComponent,
     LineComponent,
+    CardComponent,
   ],
   imports: [
     RouterModule.forRoot(routes, { enableTracing: true }),

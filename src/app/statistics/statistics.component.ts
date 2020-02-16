@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from '../api.service';
-import {Observable, of} from 'rxjs';
+import { ApiService } from '../api.service';
+import { Observable } from 'rxjs';
 
 export type DataType = any[][];
 
@@ -13,20 +13,8 @@ export class StatisticsComponent implements OnInit {
 
   lastConnections$: Observable<any[]>;
 
-  dataEvolution = [10, 41, 35, 51, 49, 62, 69, 91, 148];
-  axesEvolution = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep'
-  ];
-  labelsEvolution = 'Desktops';
-  titreEvolution = 'Product Trends by Month';
+  labelsEvolution = 'Fingerprints';
+  titreEvolution = 'Connexions Mensuelles';
 
   systems$: Observable<DataType>;
   timezones$: Observable<DataType>;

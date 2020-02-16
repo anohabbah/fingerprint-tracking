@@ -35,7 +35,7 @@ export class PieComponent implements OnInit {
     this.chartOptions = {
       series: this.series,
       chart: {
-        width: 380,
+        width: '100%',
         type: 'donut'
       },
       labels: this.labels,

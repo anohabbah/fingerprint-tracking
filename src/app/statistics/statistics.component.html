@@ -1,43 +1,75 @@
-<div class="container">
-  <p>Analyse</p>
-  <p>Analyse OS</p>
-  <app-pie [series]="(systems$ | async)[1]" [labels]="(systems$ | async)[0]"></app-pie>
+<div class="container my-5">
+  <h2>Nos Analyses</h2>
 
-  <p>Analyse Fuseau horaire</p>
-  <app-pie [series]="(timezones$ | async)[1]" [labels]="(timezones$ | async)[0]"></app-pie>
+  <div class="row mb-4">
+    <div class="w-100">
+      <div class="card">
+        <div class="card-header">Utilisateurs</div>
+        <div class="card-body">
+          <table class="table w-100">
+            <thead>
+            <tr>
+              <th>Browser Fingerprint</th>
+              <th class="text-right">Total Connection</th>
+              <th>Last connection</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let finger of lastConnections$ | async">
+              <th>{{ finger._id }}</th>
+              <td class="text-right">{{ finger.count }}</td>
+              <td>{{ finger.updatedAt }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>Analyse Resolutions</p>
-  <app-pie [series]="(screenResolutions$ | async)[1]" [labels]="(screenResolutions$ | async)[0]"></app-pie>
+  <div class="row row-cols-1 row-cols-md-2">
+    <div class="col-6 mb-4">
+      <app-card [title]="'Systèmes d\'exploitation'" [data]="systems$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Navigateurs'" [data]="browser$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Fuseaux Horaires'" [data]="timezones$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Resolutions Ecran'" [data]="screenResolutions$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Taille mémoire RAM (en Go)'" [data]="memories$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Nbre Coeur Processeur'" [data]="cores$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Langues'" [data]="languages$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <app-card [title]="'Connexions Mensuelles'" [data]="monthlyConnections$ | async"></app-card>
+    </div>
+    <div class="col-6 mb-4">
+      <p>Cartes Graphiques</p>
+      <ul>
+        <li *ngFor="let card of graphicCards$ | async">
+          {{ card }}
+        </li>
+      </ul>
+    </div>
+  </div>
 
-  <p>Analyse taille de la mémoire RAM (en Go)</p>
-  <app-pie [series]="(memories$ | async)[1]" [labels]="(memories$ | async)[0]"></app-pie>
-
-  <p>Analyse Nombre de Coeurs du processeurs</p>
-  <app-pie [series]="(cores$ | async)[1]" [labels]="(cores$ | async)[0]"></app-pie>
-
-  <p>Analyse Langage</p>
-  <app-pie [series]="(languages$ | async)[1]" [labels]="(languages$ | async)[0]"></app-pie>
-
-  <p>Analyse Navigateurs Utilisés</p>
-  <app-pie [series]="(browser$ | async)[1]" [labels]="(browser$ | async)[0]"></app-pie>
-
-  <p>Analyse Connexion</p>
-  <app-pie [series]="(monthlyConnections$ | async)[1]" [labels]="(monthlyConnections$ | async)[0]"></app-pie>
-
-  <p>Analyse liste Dernière Connexion</p>
-  <ul>
-    <li *ngFor="let conn of lastConnections$ | async">
-      {{ conn._id }}
-    </li>
-  </ul>
-
-  <p>Analyse liste Graphique</p>
-  <ul>
-    <li *ngFor="let card of graphicCards$ | async">
-      {{ card }}
-    </li>
-  </ul>
-
-  <p>Analyse Evolutions</p>
-  <app-line [data]="dataEvolution" [axes]="axesEvolution" [labels]="labelsEvolution" [title]="titreEvolution"></app-line>
+  <div class="row">
+    <div class="w-100">
+      <div class="card">
+        <div class="card-header">Evolution des connexions</div>
+        <div class="card-img-top">
+          <app-line [data]="(monthlyConnections$ | async)[1]" [axes]="(monthlyConnections$ | async)[0]" [labels]="labelsEvolution" [title]="titreEvolution"></app-line>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

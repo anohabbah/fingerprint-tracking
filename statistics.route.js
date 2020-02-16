@@ -119,19 +119,19 @@ router.get('/user-agents', async (req, res) => {
 });
 
 router.get('/connections', async (req, res) => {
-  const data = await Connection.find(null, null, { sort: '-updatedAt', limit: 10 });
+  let data = await Connection.find(null, null, { sort: '-updatedAt', limit: 10 });
+
+  data = map((doc) => ({
+    ...doc.toJSON(),
+    createdAt: formatWithOptions({ locale: fr }, 'PPPPpppp')(doc.createdAt),
+    updatedAt: formatWithOptions({ locale: fr }, 'PPPPpppp')(doc.updatedAt)
+  }), data);
 
   res.json({ data });
 });
 
-router.get('/last-connection', async (req, res) => {
-  const data = await Connection.find(null, null, { sort: '-updatedAt', limit: 1 });
-
-  res.json(data);
-});
-
 router.get('/monthly', async (req, res) => {
-  const docs = await Connection.find({}, null, { sort: '-updatedAt' });
+  const docs = await Connection.find({}, null, { sort: 'updatedAt' });
 
   const dateFormat = formatWithOptions({ locale: fr }, 'MMMM yyyy');
 
