@@ -61,9 +61,19 @@ router.get('/os', async (req, res) => {
 });
 
 router.get('/graphic-cards', async (req, res) => {
-  const data = formatData('webglVendorAndRenderer');
+  const docs = await Connection.find({
+    'fingerprint.key': 'webglVendorAndRenderer'
+  });
 
-  res.json({ data: keys(data) });
+  let data = pipe(
+    map(doc => doc.fingerprint.map(data => ({ ...data, count: doc.count }))),
+    map(filter({ key: 'webglVendorAndRenderer' })),
+    flatten,
+    groupBy('value'),
+    mapValues((value) => value.length),
+  )(docs);
+
+  res.json({ data });
 });
 
 router.get('/timezones', async (req, res) => {

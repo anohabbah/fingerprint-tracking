@@ -23,7 +23,7 @@ export class StatisticsComponent implements OnInit {
   cores$: Observable<DataType>;
   languages$: Observable<DataType>;
   browser$: Observable<DataType>;
-  graphicCards$: Observable<string[]>;
+  graphicCards$: Observable<{ key: string, value: number }[]>;
   monthlyConnections$: Observable<DataType>;
 
   constructor(private apiService: ApiService) {}

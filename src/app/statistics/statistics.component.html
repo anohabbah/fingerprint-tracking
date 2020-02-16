@@ -52,22 +52,37 @@
     <div class="col-6 mb-4">
       <app-card [title]="'Connexions Mensuelles'" [data]="monthlyConnections$ | async"></app-card>
     </div>
-    <div class="col-6 mb-4">
-      <p>Cartes Graphiques</p>
-      <ul>
-        <li *ngFor="let card of graphicCards$ | async">
-          {{ card }}
-        </li>
-      </ul>
-    </div>
   </div>
 
   <div class="row">
+    <div class="w-100 mb-4">
+      <div class="card">
+        <div class="card-header">Cartes graphiques</div>
+        <div class="card-body">
+          <div class="card-text">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Marque</th>
+                <th>Nbre utilisateurs</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let card of graphicCards$ | async">
+                <td>{{ card.key }}</td>
+                <td>{{ card.value }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="w-100">
       <div class="card">
         <div class="card-header">Evolution des connexions</div>
         <div class="card-img-top">
-          <app-line [data]="(monthlyConnections$ | async)[1]" [axes]="(monthlyConnections$ | async)[0]" [labels]="labelsEvolution" [title]="titreEvolution"></app-line>
+          <app-line [data]="(monthlyConnections$ | async)[1]" [axes]="(monthlyConnections$ | async)[0]" [label]="labelsEvolution" [title]="titreEvolution"></app-line>
         </div>
       </div>
     </div>

@@ -28,11 +28,13 @@ export class ApiService {
       );
   }
 
-  getGraphicCardStats(): Observable<string[]> {
+  getGraphicCardStats(): Observable<{ key: string, value: number }[]> {
     return this.http
       .get(`${this.statisticsBaseURL}/graphic-cards`)
       .pipe(
-        map((res: { data: string[] }) => res.data),
+        map((res: { data }) => {
+          return Object.keys(res.data).map(key => ({ key, value: res.data[key] }));
+        }),
         shareReplay(),
         catchError(this.handleError('getGraphicCardStats', []))
       );
